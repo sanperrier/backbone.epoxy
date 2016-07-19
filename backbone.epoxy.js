@@ -587,7 +587,7 @@
         if ($element.length > 1) {
           $element = $element.filter('[value="'+ value +'"]');
         }
-        
+
         // Default as loosely-typed boolean:
         var checked = !!value;
 
@@ -780,7 +780,7 @@
         if ($element[0].selectedIndex < 0 && $element.children().length) {
           $element[0].selectedIndex = 0;
         }
-        
+
         // Pull revised value with new options selection state:
         var revisedValue = $element.val();
 
@@ -1354,6 +1354,7 @@
     var triggers = [];
     var reset = function(target) {
       self.$el && self.set(self.$el, readAccessor(accessor), target);
+      view.trigger('domSync', self.$el);
     };
 
     self.view = view;
