@@ -1353,6 +1353,7 @@
     var changable = (tag == 'input' || tag == 'select' || tag == 'textarea' || $element.prop('contenteditable') == 'true');
     var triggers = [];
     var reset = function(target) {
+      view.trigger('beforeDomSync', self.$el);
       self.$el && self.set(self.$el, readAccessor(accessor), target);
       view.trigger('domSync', self.$el);
     };
