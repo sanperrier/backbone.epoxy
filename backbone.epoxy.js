@@ -185,13 +185,16 @@
       // Resolve computeds hash, and extend it with any preset attribute keys:
       // TODO: write test.
       var computeds = _.result(this, 'computeds')||{};
-      computeds = _.extend(computeds, _.pick(attributes||{}, _.keys(computeds)));
+      // computeds = _.extend(computeds, _.pick(attributes||{}, _.keys(computeds)));
 
       // Add all computed attributes:
       _.each(computeds, function(params, attribute) {
         params._init = 1;
         this.addComputed(attribute, params);
       }, this);
+
+      // Set attributes via computeds
+      this.set(_.pick(attributes || {}, _.keys(computeds)));
 
       // Initialize all computed attributes:
       // all presets have been constructed and may reference each other now.
@@ -587,7 +590,7 @@
         if ($element.length > 1) {
           $element = $element.filter('[value="'+ value +'"]');
         }
-
+        
         // Default as loosely-typed boolean:
         var checked = !!value;
 
@@ -780,7 +783,7 @@
         if ($element[0].selectedIndex < 0 && $element.children().length) {
           $element[0].selectedIndex = 0;
         }
-
+        
         // Pull revised value with new options selection state:
         var revisedValue = $element.val();
 
@@ -1353,9 +1356,7 @@
     var changable = (tag == 'input' || tag == 'select' || tag == 'textarea' || $element.prop('contenteditable') == 'true');
     var triggers = [];
     var reset = function(target) {
-      view.trigger('beforeDomSync', self.$el);
       self.$el && self.set(self.$el, readAccessor(accessor), target);
-      view.trigger('domSync', self.$el);
     };
 
     self.view = view;
