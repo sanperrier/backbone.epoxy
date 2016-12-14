@@ -270,7 +270,7 @@
         options = options || {};
 
         if (!options.silent) {
-          this.trigger('change:'+attribute+' change', this, array, options);
+          this.trigger('change:'+attribute+' change', this, obj, options);
         }
         return result;
       }
