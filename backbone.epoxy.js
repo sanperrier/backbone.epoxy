@@ -564,47 +564,53 @@
           $element = $element.filter(evt.target);
         }
 
-        var checked = !!$element.prop('checked');
-        var value = $element.val();
+        if($element.length) {
+          var checked = !!$element.prop('checked');
+          var value = $element.val();
 
-        if (this.isRadio($element)) {
-          // Radio button: return value directly.
-          return value;
+          if (this.isRadio($element)) {
+            // Radio button: return value directly.
+            return value;
 
-        } else if (isArray(currentValue)) {
-          // Checkbox array: add/remove value from list.
-          currentValue = currentValue.slice();
-          var index = _.indexOf(currentValue, value);
+          } else if (isArray(currentValue)) {
+            // Checkbox array: add/remove value from list.
+            currentValue = currentValue.slice();
+            var index = _.indexOf(currentValue, value);
 
-          if (checked && index < 0) {
-            currentValue.push(value);
-          } else if (!checked && index > -1) {
-            currentValue.splice(index, 1);
+            if (checked && index < 0) {
+              currentValue.push(value);
+            } else if (!checked && index > -1) {
+              currentValue.splice(index, 1);
+            }
+            return currentValue;
           }
-          return currentValue;
+          // Checkbox: return boolean toggle.
+          return checked;
+        } else {
+          return undefined;
         }
-        // Checkbox: return boolean toggle.
-        return checked;
       },
       set: function($element, value) {
         if ($element.length > 1) {
           $element = $element.filter('[value="'+ value +'"]');
         }
         
-        // Default as loosely-typed boolean:
-        var checked = !!value;
+        if($element.length) {
+          // Default as loosely-typed boolean:
+          var checked = !!value;
 
-        if (this.isRadio($element)) {
-          // Radio button: match checked state to radio value.
-          checked = (value == $element.val());
+          if (this.isRadio($element)) {
+            // Radio button: match checked state to radio value.
+            checked = (value == $element.val());
 
-        } else if (isArray(value)) {
-          // Checkbox array: match checked state to checkbox value in array contents.
-          checked = _.contains(value, $element.val());
+          } else if (isArray(value)) {
+            // Checkbox array: match checked state to checkbox value in array contents.
+            checked = _.contains(value, $element.val());
+          }
+
+          // Set checked property to element:
+          $element.prop('checked', checked);
         }
-
-        // Set checked property to element:
-        $element.prop('checked', checked);
       },
       // Is radio button: avoids '.is(":radio");' check for basic Zepto compatibility.
       isRadio: function($element) {
