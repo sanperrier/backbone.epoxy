@@ -1359,7 +1359,7 @@
 
     var self = this;
     var tag = ($element[0].tagName).toLowerCase();
-    var changable = (tag == 'input' || tag == 'select' || tag == 'textarea' || $element.prop('contenteditable') == 'true');
+    var changable = (tag == 'input' || tag == 'select' || tag == 'textarea' || $element.prop('contenteditable') == 'true' || $element[0].hasAttribute('data-changable'));
     var triggers = [];
     var reset = function(target) {
       self.$el && self.set(self.$el, readAccessor(accessor), target);
