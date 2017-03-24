@@ -592,24 +592,30 @@
       },
       set: function($element, value) {
         if ($element.length > 1) {
-          $element = $element.filter('[value="'+ value +'"]');
+          if(!_.isArray(value)) {
+            $element = $element.filter('[value="'+ value +'"]');
+          }
         }
-        
+  
         if($element.length) {
-          // Default as loosely-typed boolean:
-          var checked = !!value;
-
           if (this.isRadio($element)) {
             // Radio button: match checked state to radio value.
-            checked = (value == $element.val());
-
-          } else if (isArray(value)) {
+            $element.each(function() {
+              var $this = $(this);
+              $this.prop('checked', value == $this.val());
+            });
+            
+          } else if (_.isArray(value)) {
             // Checkbox array: match checked state to checkbox value in array contents.
-            checked = _.contains(value, $element.val());
+            $element.each(function() {
+              var $this = $(this);
+              $this.prop('checked', _.contains(value, $this.val()));
+            });
+            
+          } else {
+            // Checkbox toggles
+            $element.prop('checked', !!value);
           }
-
-          // Set checked property to element:
-          $element.prop('checked', checked);
         }
       },
       // Is radio button: avoids '.is(":radio");' check for basic Zepto compatibility.
