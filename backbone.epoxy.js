@@ -71,7 +71,7 @@
     constructor: function(attributes, options) {
       _.extend(this, _.pick(options||{}, modelProps));
       _super(this, 'constructor', arguments);
-      this.initComputeds(this.attributes, options);
+      this.initComputeds(attributes, options);
     },
 
     // Gets a copy of a model attribute value:
@@ -192,13 +192,23 @@
         params._init = 1;
         this.addComputed(attribute, params);
       }, this);
-
-      // Set attributes via computeds
-      this.set(_.pick(attributes || {}, _.keys(computeds)));
-
+	  
       // Initialize all computed attributes:
       // all presets have been constructed and may reference each other now.
       _.invoke(this.c(), 'init');
+	  
+	  // Set attributes via computeds
+	  var computed = _.mapObject(this.c(), function(params, attribute){
+		return params.value;
+	  });
+      var defaultComputeds = _.pick(_.result(this, 'defaults'), function(value, attribute) {
+		return _(computed).has(attribute) && isUndefined(computed[attribute]); 
+	  });
+	  var attributeComputeds = _.pick(attributes, function(value, attribute) {
+		return _(computed).has(attribute); 
+	  });
+	  
+	  this.set(_.defaults(attributeComputeds, defaultComputeds));
     },
 
     // Adds a computed attribute to the model:
@@ -233,6 +243,7 @@
 
       // Create a new computed attribute:
       this.c()[ attribute ] = new EpoxyComputedModel(this, attribute, params, delayInit);
+	  delete this.attributes[attribute];
       return this;
     },
 
