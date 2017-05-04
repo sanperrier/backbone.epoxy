@@ -70,8 +70,14 @@
     // configures computed model attributes around the underlying native Backbone model.
     constructor: function(attributes, options) {
       _.extend(this, _.pick(options||{}, modelProps));
+	  
+	  var initialize = this.initialize;
+	  this.initialize = _.noop;
+
       _super(this, 'constructor', arguments);
       this.initComputeds(attributes, options);
+	  
+	  initialize.apply(this, arguments);
     },
 
     // Gets a copy of a model attribute value:
