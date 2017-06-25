@@ -186,6 +186,8 @@
     // called automatically by the native constructor,
     // or may be called manually when adding Epoxy as a mixin.
     initComputeds: function(attributes, options) {
+	  if (options && options.parse) attributes = this.parse(attributes, options) || {};
+	  
       this.clearComputeds();
 
       // Resolve computeds hash, and extend it with any preset attribute keys:
