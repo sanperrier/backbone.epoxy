@@ -1,6 +1,6 @@
 {
   "name"          : "backbone.epoxy",
-  "version"       : "1.5.8",
+  "version"       : "1.5.9",
   "main"          : "backbone.epoxy.js",
   "dependencies"  : {
     "backbone"    : ">=0.9.9",

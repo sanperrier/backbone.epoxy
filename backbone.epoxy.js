@@ -433,7 +433,18 @@
       // will automatically register themselves within the model bindings map.
       var bindings = {};
       var deps = modelMap = [];
-      this.get(true);
+	  
+	  if(this.model.hasComputed(this.name)) {
+		  this.get(true);
+	  } else {
+	    // Store current value in model attributes to make sure
+	    // all previously inited computeds dependant on this will get updated value
+	    var oldAttributeValue = this.val(this.name);
+	    var val = this._get.apply(this.model, _.map(this.deps, this.val, this));
+	    this.model.set(this.name, val, { silent: true });
+        this.change(val);
+	    this.model.set(this.name, oldAttributeValue, { silent: true });
+	  }
       modelMap = null;
 
       // If the computed has dependencies, then proceed to binding it:
@@ -497,17 +508,18 @@
 
     // Changes the computed's value:
     // new values are cached, then fire an update event.
-    change: function(value) {
+    change: function(value, silent) {
       if (!_.isEqual(value, this.value)) {
         this.value = value;
-        var evt = ['change:'+this.name, this.model, value];
+		
+		var evt = ['change:'+this.name, this.model, value];
 
-        if (this.model._setting) {
-          this.model._setting.push(evt);
-        } else {
-          evt[0] += ' change';
-          this.model.trigger.apply(this.model, evt);
-        }
+		if (this.model._setting) {
+		  this.model._setting.push(evt);
+		} else {
+		  evt[0] += ' change';
+		  this.model.trigger.apply(this.model, evt);
+		}
       }
     },
 
