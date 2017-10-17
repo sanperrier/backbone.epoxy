@@ -216,7 +216,8 @@
 		return _(computed).has(attribute); 
 	  });
 	  
-	  this.set(_.defaults(attributeComputeds, defaultComputeds));
+	  this.set(defaultComputeds);
+	  this.set(attributeComputeds);
     },
 
     // Adds a computed attribute to the model:
