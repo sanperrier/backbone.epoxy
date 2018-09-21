@@ -1424,7 +1424,7 @@
     // => Binding handler has a getter method.
     // => Value accessor is a function.
     if (changable && handler.get && isFunction(accessor)) {
-      self.$el.on(events, function(evt) {
+      self.$el.on(self.evt, function(evt) {
         accessor(self.get(self.$el, readAccessor(accessor), evt));
       });
     }
