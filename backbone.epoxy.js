@@ -178,7 +178,7 @@
       var wait = options.wait;
 
       var destroy = function() {
-        this.clearComputeds();
+        model.clearComputeds();
         model.stopListening();
         model.trigger('destroy', model, model.collection, options);
       };
@@ -193,7 +193,11 @@
       if (this.isNew()) {
         _.defer(options.success);
       } else {
-        wrapError(this, options);
+        var error = options.error;
+        options.error = function(resp) {
+          if (error) error.call(options.context, model, resp, options);
+          model.trigger('error', model, resp, options);
+        };
         xhr = this.sync('delete', this, options);
       }
       if (!wait) destroy();
