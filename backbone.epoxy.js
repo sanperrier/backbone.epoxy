@@ -930,13 +930,18 @@
       },
       set: function($element, value) {
         try {
-          if ($element.val() + '' != value + '') $element.val(value);
+          if ($element.val() + '' != value + '') $element.val(this.isRadio($element) ? [value] : value);
         } catch (error) {
           // Error setting value: IGNORE.
           // This occurs in IE6 while attempting to set an undefined multi-select option.
           // unfortuantely, jQuery doesn't gracefully handle this error for us.
           // remove this try/catch block when IE6 is officially deprecated.
         }
+      },
+      // Is radio button: avoids '.is(":radio");' check for basic Zepto compatibility.
+      isRadio: function($element) {
+        const type = $element.attr('type');
+        return type && $element.attr('type').toLowerCase() === 'radio';
       }
     })
   };
