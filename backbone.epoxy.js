@@ -608,7 +608,7 @@
 
   // Formatting function for defining new handler objects:
   function makeHandler(handler) {
-    return isFunction(handler) ? {set: handler} : handler;
+    return isFunction(handler) ? {set: handler} : Object.create(handler);
   }
 
   var bindingHandlers = {
